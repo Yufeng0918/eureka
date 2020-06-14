@@ -140,8 +140,11 @@ public class ExampleEurekaClient {
         ExampleEurekaClient sampleClient = new ExampleEurekaClient();
 
         // create the client
-        ApplicationInfoManager applicationInfoManager = initializeApplicationInfoManager(new MyDataCenterInstanceConfig());
-        EurekaClient client = initializeEurekaClient(applicationInfoManager, new DefaultEurekaClientConfig());
+        EurekaInstanceConfig instanceConfig = new MyDataCenterInstanceConfig();
+        ApplicationInfoManager applicationInfoManager = initializeApplicationInfoManager(instanceConfig);
+
+        EurekaClientConfig  eurekaClientConfig =  new DefaultEurekaClientConfig();
+        EurekaClient client = initializeEurekaClient(applicationInfoManager, eurekaClientConfig);
 
         // use the client
         sampleClient.sendRequestToServiceUsingEureka(client);
