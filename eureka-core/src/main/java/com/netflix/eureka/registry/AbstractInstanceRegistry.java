@@ -325,6 +325,7 @@ public abstract class AbstractInstanceRegistry implements InstanceRegistry {
                 String svip = null;
                 if (instanceInfo != null) {
                     instanceInfo.setActionType(ActionType.DELETED);
+                    // add to recently change queue
                     recentlyChangedQueue.add(new RecentlyChangedItem(leaseToCancel));
                     instanceInfo.setLastUpdatedTimestamp();
                     vip = instanceInfo.getVIPAddress();
@@ -601,12 +602,14 @@ public abstract class AbstractInstanceRegistry implements InstanceRegistry {
         List<Lease<InstanceInfo>> expiredLeases = new ArrayList<>();
         for (Entry<String, Map<String, Lease<InstanceInfo>>> groupEntry : registry.entrySet()) {
             Map<String, Lease<InstanceInfo>> leaseMap = groupEntry.getValue();
-            if (leaseMap != null) {
-                for (Entry<String, Lease<InstanceInfo>> leaseEntry : leaseMap.entrySet()) {
-                    Lease<InstanceInfo> lease = leaseEntry.getValue();
-                    if (lease.isExpired(additionalLeaseMs) && lease.getHolder() != null) {
-                        expiredLeases.add(lease);
-                    }
+
+            if (leaseMap == null)
+                break;
+
+            for (Entry<String, Lease<InstanceInfo>> leaseEntry : leaseMap.entrySet()) {
+                Lease<InstanceInfo> lease = leaseEntry.getValue();
+                if (lease.isExpired(additionalLeaseMs) && lease.getHolder() != null) {
+                    expiredLeases.add(lease);
                 }
             }
         }

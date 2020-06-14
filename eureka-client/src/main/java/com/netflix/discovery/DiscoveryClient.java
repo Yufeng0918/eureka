@@ -865,10 +865,12 @@ public class DiscoveryClient implements EurekaClient {
         if (isShutdown.compareAndSet(false, true)) {
             logger.info("Shutting down DiscoveryClient ...");
 
+            // remove listener
             if (statusChangeListener != null && applicationInfoManager != null) {
                 applicationInfoManager.unregisterStatusChangeListener(statusChangeListener.getId());
             }
 
+            // shutdown thread pool
             cancelScheduledTasks();
 
             // If APPINFO was registered
