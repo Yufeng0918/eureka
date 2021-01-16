@@ -608,6 +608,7 @@ public abstract class AbstractInstanceRegistry implements InstanceRegistry {
 
             for (Entry<String, Lease<InstanceInfo>> leaseEntry : leaseMap.entrySet()) {
                 Lease<InstanceInfo> lease = leaseEntry.getValue();
+                // 如果每个服务实列的心跳时间超过了 2 * duration 才会任务服务实列故障
                 if (lease.isExpired(additionalLeaseMs) && lease.getHolder() != null) {
                     expiredLeases.add(lease);
                 }
